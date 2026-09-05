@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in [
+          'admin',
+          'Admin',
+          'ADMIN'
+        ];
+    }
+
+    function hasQueueAccess(queueId) {
+      return isAdmin() ||
+        exists(/databases/$(database)/documents/queues/$(queueId)) &&
+        get(/databases/$(database)/documents/queues/$(queueId)).data.createdBy == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId);
+      allow read, update: if isOwner(userId) || isAdmin();
+      allow delete: if false;
+    }
+
+    match /queues/{queueId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin();
+      allow update: if hasQueueAccess(queueId);
+      allow delete: if false;
+    }
+
+    match /tokens/{tokenId} {
+      allow read: if isSignedIn() &&
+        (resource.data.userId == request.auth.uid || hasQueueAccess(resource.data.queueId));
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if hasQueueAccess(resource.data.queueId);
+      allow delete: if false;
+    }
+
+    match /history/{historyId} {
+      allow read: if isSignedIn() &&
+        (resource.data.userId == request.auth.uid || hasQueueAccess(resource.data.queueId));
+      allow create: if hasQueueAccess(request.resource.data.queueId);
+      allow update, delete: if false;
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAdmin();
+      allow update: if isSignedIn() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if false;
+    }
+  }
+}
