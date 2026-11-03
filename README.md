@@ -32,6 +32,9 @@
 - [💻 Running & Building](#-running--building)
 - [🧪 Testing](#-testing)
 - [🛠️ Tech Stack & Dependencies](#️-tech-stack--dependencies)
+- [🛡️ Concurrency & System Reliability](#️-concurrency--system-reliability)
+- [🤖 AI Usage & Engineering Transparency](#-ai-usage--engineering-transparency)
+- [🔮 Future Roadmap](#-future-roadmap)
 - [❓ Troubleshooting & FAQ](#-troubleshooting--faq)
 - [📄 License & Authors](#-license--authors)
 
@@ -431,7 +434,28 @@ flutter analyze
 
 ---
 
-## ❓ Troubleshooting & FAQ
+## 🛡️ Concurrency & System Reliability
+
+- **Race-Condition Prevention:** FlowEZ uses atomic Cloud Firestore transactions (`runTransaction`) for token creation, advancing the queue, and completing service tickets. This guarantees that concurrent users requesting tokens at the same millisecond never receive duplicate numbers.
+- **Resilient Error Recovery:** The app implements specialized initialization guards and network exception handling (`SocketException`, `FirebaseException`) with user-friendly retry banners and fallback states.
+
+---
+
+## 🤖 AI Usage & Engineering Transparency
+
+- AI was utilized during the development lifecycle primarily as an engineering copilot for architectural exploration, diagnosing low-level Flutter/Gradle compatibility errors, and refining state management patterns.
+- **Predictive Wait Times:** Machine-learning-based dynamic wait-time estimation was evaluated. It is planned for future releases once sufficient real-world historical queue turnaround data is gathered to train an accurate predictive model.
+
+---
+
+## 🔮 Future Roadmap
+
+- [ ] **AI-Powered Predictive Wait Times:** Train regression models on historical throughput to forecast queue wait durations accurately.
+- [ ] **Push Notifications:** Firebase Cloud Messaging (FCM) integration for real-time background push alerts when a customer's turn is approaching.
+- [ ] **Multi-Counter & Department Routing:** Support for multi-desk service stations within a single establishment.
+- [ ] **SMS / WhatsApp Token Fallback:** Allow users without smartphones or the app installed to receive updates via standard SMS web links.
+
+---
 
 <details>
 <summary><b>1. App stuck on "Initialization Error" or "Firestore not available"</b></summary>
