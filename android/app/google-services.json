@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "831746295550",
+    "project_id": "flowez-949b2",
+    "storage_bucket": "flowez-949b2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831746295550:android:23d59df9de989bc32d87af",
+        "android_client_info": {
+          "package_name": "com.example.flowez"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKG15bmqpHiwqxGW_I3daeTCHCusj6VBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
